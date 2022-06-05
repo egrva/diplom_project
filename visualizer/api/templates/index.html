@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="wrap-login100">
+                <div class="container-index100-form-btn">
+                    <a href="{% url 'analyze_total' %}" class="login100-form-btn">
+                        К общей статистике
+                    </a>
+                </div>
+                <div class="container-index100-form-btn">
+                    <a  href="{% url 'student_list' %}" class="login100-form-btn">
+                        К списку студентов
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

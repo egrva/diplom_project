@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="limiter ">
+        <div class="container-login100 ">
+
+            <div class="wrap-login100 justify-content-center align-items-center" style="padding-top: 50px">
+                <span class="login100-form-title" style="font: inherit; font-size: 40px">Список студентов</span>
+                <div class="row" style="text-align: justify-all">
+                    <div class="col text-nowrap bd-highlight"  >
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <input id="user-input" placeholder="Найти...">
+                    </div>
+
+                    <div id="replaceable-content" class="col" style="width: 400px" >
+                        {% include 'student-result-partial.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

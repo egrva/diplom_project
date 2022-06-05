@@ -1,0 +1,14 @@
+
+{% if students %}
+  <ul>
+  {% for student in students %}
+    <li>
+    <a href="{% url 'student-analyze' pk=student.student_id %}" style="margin-bottom: 10px; font: inherit; color: black">
+        {{ student.second_name}} {{ student.first_name }} {{ student.group }}
+    </a>
+    </li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <p style="font: inherit">Студентов с таким именем не найдено</p>
+{% endif %}

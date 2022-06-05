@@ -1,0 +1,394 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                    class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+        </div>
+
+        <div class="row">
+            <!-- ФИО СТУДЕНТА -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Студент
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {{ student_name }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fa fa-user-circle fa-3x"
+                                   aria-hidden="true"
+                                ></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ВРЕМЯ ОБРАЩЕНИЯ -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-success shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Время обращения
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {% if most_popular_time %}
+                                        {{ most_popular_time|safe }}
+                                    {% else %}
+                                        Нет данных о переписке
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fa fa-clock-o fa-3x" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Количество лайков -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                    Лайки в ВКонтакте
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {% if likes_count %}
+                                        {{ likes_count|safe }}
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fa fa-heart fa-3x" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Рейтинг -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    Рейтинг
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                    {% if avg_score %}
+                                        {{ avg_score|safe }}
+                                    {% else %}
+                                        Нет данных о рейтинге
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fa fa-graduation-cap fa-3x" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Row -->
+
+        <div class="row">
+
+            <!-- Area Chart -->
+            <div class=" col-xl-7 col-lg-7">
+                <div class="card shadow mb-4 ">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Успеваемость по предметам</h6>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="chart-area" style="height: 400px;">
+
+                            <canvas id="likes-chart"></canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pie Chart -->
+            <div class="col-xl-5 col-lg-5">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Оценки</h6>
+
+                    </div>
+                    <!-- Card Body -->
+
+                    <div class="card-body">
+                        <div class="chart-pie pt-4 pb-2 " style="height: 400px">
+                            {% if marks %}
+                            <canvas id="score-pie-chart" height="200px"></canvas>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+
+            <!-- Эмоции студента -->
+            <div class="col-xl-4 col-lg-4">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Эмоции студента</h6>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="chart-pie pt-4 pb-2 " style="height: 300px">
+                            {% if avg_neutral_student %}
+                            <canvas id="emotions-students" height="200px"></canvas>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Эмоции деканата -->
+            <div class="col-xl-4 col-lg-4">
+                <div class="card shadow mb-4">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Эмоции деканата</h6>
+                    </div>
+                    <!-- Card Body -->
+                    <div class="card-body">
+                        <div class="chart-pie pt-4 pb-2 " style="height: 300px">
+                             {% if avg_speech_decanat %}
+                            <canvas id="emotions-decanat" height="200px"></canvas>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Кол-во сообщений -->
+            <div class="col-xl-4 col-lg-4 ">
+                <div class="row">
+                    <div class="col">
+                        <div class="card shadow mb-4">
+
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Количество сообщений от студента</h6>
+                            </div>
+
+                            <div style="height: 125px">
+                                <div class="row  align-items-center">
+                                    <div class="col">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase"
+                                             style="font-size: 80px; text-align: center; align-items: center">
+                                            {% if student_messages_count %}
+                                                {{ student_messages_count|safe }}
+                                            {% else %}
+                                                0
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-envelope fa-5x mr-5 text-info" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div style="height: 15px"></div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="card shadow mb-4">
+
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Количество сообщений от деканата</h6>
+                            </div>
+
+                            <div style="height: 125px">
+                                <div class="row  align-items-center">
+                                    <div class="col">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase"
+                                             style="font-size: 80px; text-align: center; align-items: center">
+                                            {% if decanat_messages_count %}
+                                                {{ decanat_messages_count|safe }}
+                                            {% else %}
+                                                0
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <i class="fa fa-envelope fa-5x mr-5 text-info" aria-hidden="true"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script>
+        const config_score_pie_chart = {
+            type: 'polarArea',
+            data: {
+                labels: [5, 4, 3, 2],
+                datasets: [{
+                    data: {{ marks }},
+                    backgroundColor: [
+                        'rgba(0,123,255)',
+                        'rgba(40,167,69)',
+                        'rgba(255,193,7)',
+                        'rgba(220,53,69)'
+                    ],
+                    hoverOffset: 4,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                scale: {
+                    ticks: {
+                        z: 1,
+
+                    }
+                },
+
+
+            }
+        };
+
+        var config_score_bar = {
+            type: 'bar',
+            data: {
+                labels: {{ disciplines_labels|safe }},
+                datasets: [
+                    {
+                        label: 'Средний балл',
+                        backgroundColor: '#ffc107',
+                        data: {{ total_scorers|safe }}
+                    },
+                    {
+                        label: 'Балл студента',
+                        backgroundColor: '#28a745',
+                        data: {{ disciplines_student_scores|safe }}
+                    },
+                ],
+                hoverOffset: 4,
+                borderWidth: 8
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                size: 1
+                            }
+                        }
+                    }
+                },
+                responsive: true,
+            }
+        };
+
+        var emotions_students = {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    'Не удалось определить',
+                    'Формальный',
+                    'Позитивный',
+                    'Негативный',
+                    'Нейтральный'
+                ],
+                datasets: [{
+                    data: [{{ avg_skip_student|safe }},
+                        {{ avg_speech_student|safe }},
+                        {{ avg_positive_student|safe }},
+                        {{ avg_negative_student|safe }},
+                        {{ avg_neutral_student|safe }}],
+                    backgroundColor: [
+                        'rgb(242, 100, 25)',
+                        'rgb(246, 174, 45)',
+                        'rgb(255,252,99)',
+                        'rgb(51, 101, 138)',
+                        'rgb(85, 221, 224)'
+                    ]
+                }]
+            },
+            options: {}
+        };
+
+        var emotions_decanat = {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    'Не удалось определить',
+                    'Формальный',
+                    'Позитивный',
+                    'Негативный',
+                    'Нейтральный'
+                ],
+                datasets: [{
+                    data: [{{ avg_skip_decanat|safe }},
+                        {{ avg_speech_decanat|safe }},
+                        {{ avg_positive_decanat|safe }},
+                        {{ avg_negative_decanat|safe }},
+                        {{ avg_neutral_decanat|safe }}
+                    ],
+                    backgroundColor: [
+                        'rgb(242, 100, 25)',
+                        'rgb(246, 174, 45)',
+                        'rgb(255,252,99)',
+                        'rgb(51, 101, 138)',
+                        'rgb(85, 221, 224)'
+                    ]
+                }]
+            },
+            options: {}
+        };
+
+        window.onload = function () {
+            var ctcx = document.getElementById('score-pie-chart').getContext('2d');
+            window.pie = new Chart(ctcx, config_score_pie_chart);
+            var ctx = document.getElementById('likes-chart').getContext('2d');
+            window.myPie = new Chart(ctx, config_score_bar);
+            var ctx_emotions_students = document.getElementById('emotions-students').getContext('2d');
+            window.emotions_students = new Chart(ctx_emotions_students, emotions_students);
+            var ctx_emotions_decanat = document.getElementById('emotions-decanat').getContext('2d');
+            window.emotions_decanat = new Chart(ctx_emotions_decanat, emotions_decanat);
+
+        };
+    </script>
+
+{% endblock %}
